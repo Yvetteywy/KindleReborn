@@ -10,6 +10,8 @@
 
 [在线体验](https://kindle.keyu.party/) · [快速开始](#-快速开始) · [环境变量](#-环境变量)
 
+<img src="assets/kindle-reborn-preview.png" alt="KindleReborn 墨水屏日历天气看板预览" width="600">
+
 </div>
 
 KindleReborn 是一个专为 Kindle 与其他墨水屏设备设计的单页日历。它把时间、月历、天气、空气质量、逐小时预报、农历黄历、星座运势和次日穿衣建议压进一张 **560 × 780** 的黑白画布里。
