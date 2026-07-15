@@ -10,7 +10,7 @@ dns.setDefaultResultOrder("ipv4first");
 const app = express();
 const root = process.cwd();
 const places = new Map<string, { latitude: number; longitude: number; name: string }>();
-const cache = new Map<string, { expires: number; data: unknown }>();
+const cache = new Map<string, { expires: number; slot: number; data: unknown }>();
 type Fortune = { sign: string; all: string; work: string; money: string; love: string; health: string; luck: string; date: string; source: string };
 const fortuneFile = path.join(root, "data", "constellation.json");
 let constellationCache: { sign: string; date: string; data: Fortune } | undefined;
@@ -125,8 +125,9 @@ async function locate(city: string) {
 async function display(city: string, date: string) {
   const place = await locate(city);
   const key = `${place.latitude},${place.longitude},${date}`;
+  const slot = Math.floor((Date.now() + 8 * 60 * 60_000 - 10 * 60_000) / (3 * 60 * 60_000));
   const saved = cache.get(key);
-  if (saved && saved.expires > Date.now()) return saved.data;
+  if (saved && saved.slot === slot && saved.expires > Date.now()) return saved.data;
   const coordinates = `latitude=${place.latitude}&longitude=${place.longitude}`;
   const [weather, air, fortune] = await Promise.all([
     json(`https://api.open-meteo.com/v1/forecast?${coordinates}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,wind_direction_10m&hourly=temperature_2m,weather_code,precipitation_probability&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,uv_index_max&timezone=auto&forecast_days=6`),
@@ -165,7 +166,7 @@ async function display(city: string, date: string) {
     dressing: dressing(forecast[0].high, forecast[0].low, forecast[0].rain),
     updatedAt: updated.toISOString(), source: "Open-Meteo"
   };
-  cache.set(key, { expires: Date.now() + 29 * 60_000, data: result });
+  cache.set(key, { expires: Date.now() + 29 * 60_000, slot, data: result });
   return result;
 }
 
