@@ -1,11 +1,93 @@
-*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#fff;color:#000}body{font-family:-apple-system,BlinkMacSystemFont,"Noto Sans SC","Microsoft YaHei",Arial,sans-serif}button{font:inherit;color:inherit;background:#fff;border:1px solid #000}#board{width:600px;height:800px;margin:0 auto;padding:10px 16px 8px;overflow:hidden;background:#fff}.status{height:24px;font-size:13px;border-bottom:1px solid #000}.status strong{float:left}.status span,.status button{float:right}.status button{padding:0 6px;margin:-2px 0 0 8px}.date-panel{height:267px;border:1px solid #000;margin-top:8px;display:table;width:100%;table-layout:fixed}.today,.calendar{display:table-cell;vertical-align:middle;text-align:center}.today{width:39%;border-right:1px solid #000;padding:10px 16px}.today #date{font:16px monospace;letter-spacing:2px}.today .rule{height:22px;border-top:1px solid #777;margin-top:12px;line-height:0}.today h1{font-family:serif;font-size:50px;line-height:1.2;margin:28px 0 18px;letter-spacing:5px}.today .ornament{font-family:serif;margin-bottom:22px}.today strong{font-family:serif;font-size:16px}.calendar{padding:8px 16px}.calendar h2{font-size:23px;margin:0 0 7px;padding-bottom:7px;border-bottom:1px solid #777}.calendar table{width:100%;border-collapse:collapse;table-layout:fixed}.calendar th{height:27px;font-size:14px;font-weight:400}.calendar td{height:31px;font-size:17px;font-weight:700}.calendar td span{display:inline-block;min-width:28px;padding:4px 2px}.calendar .active span{background:#000;color:#fff;border-radius:4px}.weather{height:143px;border-bottom:1px solid #000;display:table;width:100%;table-layout:fixed;padding:9px 0}.now,.metrics{display:table-cell;vertical-align:middle}.now{width:34%;text-align:center;border-right:1px solid #bbb}.now>div b{font-family:Georgia,serif;font-size:58px;line-height:.9}.now>div span{font-family:serif;font-size:26px}.now>strong{display:block;font-size:17px;margin:8px 0}.now .wi{font-size:24px}.now small{display:inline-block;border-top:1px solid #aaa;padding-top:6px;font-size:14px}.metrics{padding-left:10px}.metrics div{float:left;width:33.33%;height:51px;border-right:1px solid #bbb;padding:6px 8px}.metrics div:nth-child(n+4){border-top:1px dotted #aaa}.metrics i,.metrics b{display:block;font-style:normal;font-size:13px}.metrics b{font-size:14px;margin-top:2px}.strip{border-bottom:1px solid #000;padding:7px 0}.strip h3,.forecast h3{font-size:14px;margin:0 0 7px}.strip h3 small,.forecast h3 small{font-size:10px;margin-left:8px;font-weight:400;letter-spacing:1px}.hourly{height:72px}.hourly #hourly{display:table;width:100%;table-layout:fixed}.hourly article{display:table-cell;text-align:center;border-right:1px solid #bbb;font-size:13px}.hourly article:last-child{border:0}.hourly b{font-size:16px;margin-left:10px}.almanac{height:76px}.almanac-grid{display:table;width:100%;table-layout:fixed}.almanac-grid>div{display:table-cell;vertical-align:middle;border-right:1px solid #bbb;padding:0 12px;font-size:12px}.almanac-grid>div:first-child{width:50%;padding-left:8px}.almanac-grid>div:last-child{border:0}.almanac-grid em{display:inline-block;background:#000;color:#fff;font-style:normal;font-size:22px;padding:4px 8px;border-radius:4px;margin-right:10px}.almanac-grid span,.almanac-grid b{display:block}.almanac-grid b{font-size:13px}.dressing{height:49px;border-bottom:1px solid #000;padding:6px 12px;font-size:12px}.dressing b,.dressing span{display:block;margin-left:36px}.dressing b:before{content:"衣";float:left;margin-left:-34px;border:1px solid #000;padding:5px}.forecast{height:139px;border-bottom:1px solid #000;padding:7px 0}.forecast #forecast{display:table;width:100%;table-layout:fixed}.forecast article{display:table-cell;text-align:center;border-right:1px solid #bbb;font-size:12px}.forecast article:last-child{border:0}.forecast .icon{font-size:22px;height:31px}.forecast b,.forecast span{display:block}.forecast b{font-size:14px;margin-top:3px}.forecast span{font-size:12px;margin-top:2px}footer{height:20px;padding-top:5px;font-size:9px}footer #cache{float:right}
-@media(max-width:599px){#board{width:100vw}}
-@media(min-width:700px) and (min-height:900px){#board{transform-origin:top center;transform:scale(1.25)}}
-.forecast img,.hourly img{width:24px;height:24px;vertical-align:middle}.hourly img{width:18px;height:18px}.dressing b:before{display:none}.dressing b,.dressing span{margin-left:8px}
-.now strong img{width:23px;height:23px;vertical-align:middle;margin-right:5px}.almanac-grid>div:first-child b{display:inline}.almanac{height:82px}.dressing{height:43px;padding-top:4px;font-size:11px}
-.date-panel{height:270px;margin-top:0}.today #date{font-size:18px}.today h1{font-size:56px}.today strong{font-size:18px}.calendar h2{font-size:25px}.calendar th{font-size:16px}.calendar td{font-size:19px}.weather{height:150px}.now>div b{font-size:64px}.now>strong{font-size:20px}.now small{font-size:16px}.metrics div{height:56px;padding:7px 9px}.metrics i{font-size:15px}.metrics b{font-size:17px}.strip h3,.forecast h3{font-size:16px}.strip h3 small,.forecast h3 small{font-size:11px}.hourly{height:78px}.hourly article{font-size:14px}.hourly b{font-size:18px}.almanac{height:88px}.almanac-grid>div{font-size:14px}.almanac-grid b{font-size:15px}.dressing{height:52px;padding:6px 12px;font-size:13px;line-height:18px}.forecast{height:144px}.forecast article{font-size:14px}.forecast b{font-size:17px}.forecast span{font-size:14px}.forecast img{width:28px;height:28px}
-.today h1{margin:22px 0 12px}.today .ornament{margin-bottom:12px}.weather{height:148px}
-.forecast{height:130px}
-.forecast{padding:4px 0}.forecast h3{margin-bottom:4px}.forecast img{width:24px;height:24px}.forecast b{margin-top:1px}
-.tomorrow-panel{height:140px;border-bottom:1px solid #000;display:table;width:100%;table-layout:fixed}.tomorrow-dressing,.tomorrow-weather{display:table-cell;vertical-align:middle}.tomorrow-dressing{width:68%;padding:9px 18px 9px 8px}.tomorrow-panel h3{font-size:18px;margin:0 0 8px}.tomorrow-panel h3 small{font-size:11px;font-weight:400;margin-left:8px;letter-spacing:1px}.tomorrow-dressing p{font-size:18px;font-weight:700;line-height:1.45;margin:0}.tomorrow-weather{border-left:1px solid #aaa;text-align:center;padding:6px 10px}.tomorrow-weather h3{margin-bottom:3px}.tomorrow-weather img{width:36px;height:36px}.tomorrow-weather b,.tomorrow-weather span{display:block}.tomorrow-weather b{font-size:19px;margin:1px 0}.tomorrow-weather span{font-size:17px;font-weight:700}
-#board{height:100vh;max-height:800px;padding-top:6px;padding-bottom:4px}.date-panel{height:250px;overflow:hidden}.weather{height:132px;overflow:hidden;padding-top:5px;padding-bottom:5px}.hourly{height:72px;overflow:hidden;padding:5px 0}.hourly h3{margin-bottom:5px}.almanac{height:80px;overflow:hidden;padding:5px 0 9px}.almanac h3{margin-bottom:5px}.almanac-grid>div{padding-top:0;padding-bottom:0}.tomorrow-panel{height:145px;overflow:hidden}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; width: 100%; height: 100%; background: #fff; color: #000; }
+body { font-family: Arial, "Microsoft YaHei", sans-serif; }
+button, input, select { font: inherit; color: #000; background: #fff; border: 1px solid #000; border-radius: 0; }
+button { cursor: pointer; padding: 4px 8px; }
+a { color: #000; }
+.toolbar { height: 30px; padding: 2px 6px; border-bottom: 1px solid #000; font-size: 12px; overflow: hidden; white-space: nowrap; }
+.toolbar button { float: right; padding: 2px 6px; margin-left: 5px; }
+#city-name { line-height: 24px; }
+#board { width: 560px; height: 718px; margin: 0 auto; }
+#core-panels { display: table; width: 100%; table-layout: fixed; }
+.date-panel { display: block; height: 42%; border-bottom: 1px solid #000; padding: 8px; }
+.date-inner { display: table; width: 100%; height: 100%; table-layout: fixed; }
+.today, .calendar { display: table-cell; vertical-align: middle; text-align: center; }
+.today { width: 42%; border-right: 1px solid #777; padding: 6px; }
+#time { font-family: Georgia, serif; font-size: 49px; font-weight: bold; line-height: 1.1; }
+#date { font-size: 14px; margin-top: 8px; }
+#weekday { font-family: Georgia, serif; font-size: 25px; line-height: 1.15; margin: 12px 0; overflow-wrap: break-word; }
+#timezone { font-size: 11px; overflow-wrap: break-word; }
+.calendar { padding: 4px 8px; }
+.calendar h2 { font-size: 20px; line-height: 1.15; margin: 0 0 6px; }
+.calendar table { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 17px; }
+.calendar th { font-size: 13px; font-weight: normal; padding-bottom: 5px; }
+.calendar td { height: 27px; }
+.calendar .active { background: #000; color: #fff; font-weight: bold; }
+.forecast-panel { display: block; height: 58%; }
+.weather { display: table; table-layout: fixed; width: 100%; height: 44%; border-bottom: 1px solid #000; }
+.now, .metrics { display: table-cell; vertical-align: middle; }
+.now { width: 35%; text-align: center; border-right: 1px solid #777; padding: 6px; }
+#temp { display: block; font-family: Georgia, serif; font-size: 39px; line-height: 1.2; }
+.condition { margin: 7px 0; font-size: 17px; }
+.condition img { width: 22px; height: 22px; vertical-align: middle; margin-right: 4px; }
+.now small { font-size: 14px; }
+.metrics { padding: 6px; }
+.metrics > div { float: left; width: 33.333%; min-height: 56px; padding: 6px 4px; }
+.metrics span { display: block; font-size: 12px; }
+.metrics b { display: block; font-size: 14px; margin-top: 4px; overflow-wrap: break-word; }
+.hourly-panel { height: 23%; padding: 6px 8px; border-bottom: 1px solid #000; }
+h3 { font-size: 14px; margin: 0 0 4px; }
+#hourly { display: table; table-layout: fixed; width: 100%; text-align: center; }
+.hour { display: table-cell; border-right: 1px solid #777; font-size: 12px; }
+.hour:last-child { border: 0; }
+.hour > span { display: block; margin-bottom: 3px; }
+.hour > div { display: inline-block; vertical-align: middle; }
+.hour img { width: 20px; height: 20px; vertical-align: middle; }
+.hour b { font-size: 15px; margin-left: 3px; }
+.tomorrow-panel { display: table; table-layout: fixed; width: 100%; height: 33%; border-bottom: 1px solid #000; }
+.dressing, .tomorrow { display: table-cell; vertical-align: middle; padding: 8px; }
+.dressing { width: 60%; }
+.dressing p { font-size: 17px; line-height: 1.3; font-weight: bold; margin: 6px 0; }
+.tomorrow { text-align: center; border-left: 1px solid #777; }
+.tomorrow img { width: 24px; height: 24px; }
+.tomorrow b, .tomorrow span { display: block; font-size: 14px; margin-top: 2px; }
+#lunar-panel { height: 36px; padding: 8px; border-bottom: 1px solid #000; font-size: 14px; }
+#lunar-date { margin-left: 12px; }
+#almanac-panel { height: 104px; padding: 6px 8px; border-bottom: 1px solid #000; }
+#almanac-panel > div { display: inline-block; width: 49%; vertical-align: top; padding-right: 8px; font-size: 12px; }
+#almanac-panel b, #almanac-panel span { display: block; }
+#almanac-panel b { margin-bottom: 3px; font-size: 14px; }
+#almanac-panel small { display: block; font-size: 10px; margin-top: 5px; }
+.landscape .date-panel, .landscape .forecast-panel { display: table-cell; height: 100%; vertical-align: top; }
+.landscape .date-panel { width: 44%; border-right: 1px solid #000; }
+.landscape .date-inner { display: block; }
+.landscape .today { display: block; width: 100%; height: 39%; border-right: 0; border-bottom: 1px solid #777; }
+.landscape .calendar { display: block; height: 61%; padding-top: 12px; }
+.landscape .calendar td { height: 22px; }
+.landscape .calendar th { padding-bottom: 3px; }
+.landscape #time { font-size: 48px; }
+.landscape #weekday { font-size: 22px; margin: 6px 0; }
+.landscape .weather { height: 45%; }
+.landscape #temp { font-size: 33px; }
+.landscape .condition { font-size: 14px; }
+.landscape .metrics > div { padding: 5px 3px; min-height: 58px; }
+.landscape .metrics b { font-size: 13px; }
+.landscape .hourly-panel { height: 24%; }
+.landscape .tomorrow-panel { height: 31%; }
+.landscape .dressing p { font-size: 15px; }
+.page-footer { height: 32px; padding: 2px 6px; font-size: 9px; }
+#status { min-height: 13px; }
+#settings-panel { position: fixed; z-index: 100; top: 0; left: 0; bottom: 0; right: 0; background: #fff; padding: 12px; overflow: auto; font-size: 16px; }
+#settings-panel h2 { margin: 0 0 14px; }
+#close-settings { float: right; }
+#settings-panel form { max-width: 500px; margin-bottom: 12px; }
+#settings-panel label { display: block; margin: 8px 0 4px; }
+#settings-panel input[type="text"] { width: 70%; padding: 6px; }
+#settings-panel select { display: block; width: 100%; padding: 5px; }
+#settings-panel .toggle label { display: inline-block; }
+#settings-panel .toggle input { margin-right: 8px; }
+#search-status { font-size: 14px; }
+#city-results { padding: 0; margin: 8px 0; list-style: none; }
+#city-results button { width: 100%; text-align: left; margin-bottom: 5px; }
+#bookmark { font-size: 14px; }
+#eink-refresh { display: none; position: fixed; z-index: 9999; top: 0; left: 0; right: 0; bottom: 0; background: #000; }

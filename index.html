@@ -1,45 +1,94 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-  <title>墨日历 - Kindle 日历天气屏</title>
-  <link rel="stylesheet" href="/src/index.css?v=9">
-  <style>#board{width:560px;height:780px;padding-top:10px}.strip h3{margin-left:8px}.today #time{font-size:60px;font-weight:700;line-height:1;margin-bottom:10px;letter-spacing:1px}.today #date{font-size:17px}.today .rule{height:14px;margin-top:9px}.today h1{font-size:43px;line-height:1.1;margin:8px 0;letter-spacing:4px}.today .ornament{display:none}.today strong{font-size:17px}.metrics b{font-size:18px}.hourly{height:65px}.hourly article{font-size:15px}.hourly b{font-size:19px}.almanac{height:122px;padding:0}.almanac .almanac-grid{height:121px}.almanac .almanac-grid>div{vertical-align:top}.almanac-grid>div:first-child{width:51%}.almanac-main{padding:7px 8px!important}.almanac-main h3,.fortune h4{font-size:16px;line-height:22px;margin-top:0}.almanac-main h3{margin-bottom:8px}.almanac-actions>div{height:39px;white-space:nowrap}.fortune{padding:7px 10px 0 18px!important;text-align:left}.fortune h4{margin-bottom:7px}.fortune h4 span{display:inline;font-weight:400;margin-left:8px}.fortune-table{width:100%;border-collapse:collapse;table-layout:fixed}.fortune-table th,.fortune-table td{font-size:15px;line-height:24px;padding:0;text-align:left;white-space:nowrap}.fortune-table th{font-weight:400;width:17%}.fortune-table td{width:33%}#eink-refresh{display:none;position:fixed;z-index:9999;top:0;right:0;bottom:0;left:0;background:#000}</style>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Kindle calendar &amp; weather</title>
+  <link rel="stylesheet" href="src/index.css">
 </head>
 <body>
-<div id="eink-refresh"></div>
-<main id="board">
-  <section class="date-panel">
-    <div class="today">
-      <div id="time">00:00</div>
-      <div id="date">2026 / 07 / 12</div>
-      <div class="rule"></div>
-      <h1 id="weekday">星期日</h1>
-      <div class="ornament"></div>
-      <strong id="lunar">农历五月廿八</strong>
+  <div id="eink-refresh"></div>
+  <div class="toolbar">
+    <button id="open-settings" type="button" data-label="settings">Settings</button>
+    <button id="refresh-weather" type="button" data-label="refresh">Refresh</button>
+    <span id="city-name">Kindle calendar &amp; weather</span>
+  </div>
+  <main id="board" class="portrait">
+    <div id="core-panels">
+      <section class="date-panel">
+        <div class="date-inner">
+          <div class="today">
+            <div id="time">--:--</div>
+            <div id="date">-- / -- / --</div>
+            <h1 id="weekday">--</h1>
+            <div id="timezone"></div>
+          </div>
+          <div class="calendar">
+            <h2 id="month-title">Calendar</h2>
+            <table aria-label="Monthly calendar"><thead id="weekdays"></thead><tbody id="calendar"></tbody></table>
+          </div>
+        </div>
+      </section>
+      <section class="forecast-panel">
+        <div class="weather">
+          <div class="now">
+            <b id="temp">--</b>
+            <div class="condition"><span id="condition-icon"></span><strong id="condition">--</strong></div>
+            <small id="high-low">--</small>
+          </div>
+          <div class="metrics">
+            <div><span data-label="humidity">Humidity</span><b id="humidity">--</b></div>
+            <div><span data-label="feels">Feels like</span><b id="feels">--</b></div>
+            <div><span data-label="wind">Wind</span><b id="wind">--</b></div>
+            <div><span data-label="air">US AQI</span><b id="air">--</b></div>
+            <div><span data-label="uv">UV index</span><b id="uv">--</b></div>
+            <div><span data-label="rain">Rain chance</span><b id="rain">--</b></div>
+          </div>
+        </div>
+        <div class="hourly-panel"><h3 data-label="hourly">Hourly forecast</h3><div id="hourly"></div></div>
+        <div class="tomorrow-panel">
+          <div class="dressing"><h3 data-label="clothes">Clothing suggestion</h3><p id="dressing">--</p></div>
+          <div class="tomorrow"><h3 data-label="tomorrow">Tomorrow</h3><div id="tomorrow-icon"></div><b id="tomorrow-condition">--</b><span id="tomorrow-high-low">--</span></div>
+        </div>
+      </section>
     </div>
-    <div class="calendar">
-      <h2 id="month-title">2026年 7月</h2>
-      <table><thead><tr><th>一</th><th>二</th><th>三</th><th>四</th><th>五</th><th>六</th><th>日</th></tr></thead><tbody id="calendar"></tbody></table>
-    </div>
+    <section id="lunar-panel"><b data-label="lunar">Lunar calendar</b><span id="lunar-date">--</span></section>
+    <section id="almanac-panel">
+      <div><b data-label="suitable">Suitable</b><span id="suitable">--</span></div>
+      <div><b data-label="avoid">Avoid</b><span id="avoid">--</span></div>
+      <small data-label="traditional">Traditional calendar; cultural reference only.</small>
+    </section>
+  </main>
+  <div class="page-footer">
+    <div id="status" role="status">Choose a city in Settings to load weather.</div>
+    <span id="clock-note">Time uses your device clock.</span> · <a href="https://open-meteo.com/">Weather: Open-Meteo</a>
+  </div>
+  <section id="settings-panel" style="display:none" aria-label="Settings">
+    <button id="close-settings" type="button" data-label="close">Done</button>
+    <h2 data-label="settings">Settings</h2>
+    <form id="city-search">
+      <label for="city-input" data-label="city">City or postal code</label>
+      <input id="city-input" type="text" maxlength="100">
+      <button type="submit" data-label="search">Search</button>
+    </form>
+    <div id="search-status" role="status"></div>
+    <ul id="city-results"></ul>
+    <form id="display-settings">
+      <label for="language" data-label="language">Language</label>
+      <select id="language"><option value="en">English</option><option value="zh">中文</option></select>
+      <label for="units" data-label="units">Units</label>
+      <select id="units"><option value="us" data-label="us">US (°F, mph)</option><option value="metric" data-label="metric">Metric (°C, km/h)</option></select>
+      <label for="orientation" data-label="orientation">Layout</label>
+      <select id="orientation"><option value="portrait" data-label="portrait">Portrait</option><option value="landscape" data-label="landscape">Landscape</option></select>
+      <div class="toggle"><label><input id="show-lunar" type="checkbox"><span data-label="lunar">Lunar calendar</span></label></div>
+      <div class="toggle"><label><input id="show-almanac" type="checkbox"><span data-label="almanac">Chinese almanac</span></label></div>
+      <button type="submit" data-label="save">Apply settings</button>
+    </form>
+    <p><a id="bookmark" data-label="bookmark">Bookmark this configuration</a></p>
   </section>
-
-  <section class="weather">
-      <div class="now"><div><b id="temp">33</b><span>°C</span></div><strong><img src="/assets/cloud.svg?v=2" alt=""><span id="condition">多云</span></strong><small><span id="high">34</span>°C　/　<span id="low">26</span>°C</small></div>
-    <div class="metrics">
-      <div><i>湿度</i><b id="humidity">78%</b></div><div><i>体感</i><b id="feels">38°C</b></div><div><i>风力</i><b id="wind">东南3级</b></div>
-      <div><i>空气</i><b id="air">良 (65)</b></div><div><i>紫外线</i><b id="uv">强</b></div><div><i>降水</i><b id="rain">30%</b></div>
-    </div>
-  </section>
-
-  <section class="strip hourly"><h3>逐小时预报</h3><div id="hourly"></div></section>
-  <section class="strip almanac"><div class="almanac-grid"><div class="almanac-main"><h3>今日黄历</h3><div class="almanac-actions"><div><em>宜</em><b id="suitable">加载中</b></div><div><em>忌</em><b id="avoid">加载中</b></div></div></div><div class="fortune"><h4>星座运势 <span id="fortune-sign">水瓶座</span></h4><table class="fortune-table"><tbody><tr><th>综合</th><td id="fortune-all">较佳</td><th>事业</th><td id="fortune-work">平稳</td></tr><tr><th>财运</th><td id="fortune-money">有利</td><th>感情</th><td id="fortune-love">顺遂</td></tr><tr><th>健康</th><td id="fortune-health">良好</td><th>幸运</th><td id="fortune-luck">蓝 · 7</td></tr></tbody></table></div></div></section>
-  <section class="tomorrow-panel">
-    <div class="tomorrow-dressing"><h3>明日穿衣推荐</h3><p id="dressing">明日闷热有雷雨，建议穿轻薄透气短袖，外出随身携带雨伞。</p></div>
-    <div class="tomorrow-weather"><h3>明日天气</h3><div id="tomorrow-icon"></div><b id="tomorrow-condition">多云</b><span id="tomorrow-high-low">34°C / 26°C</span></div>
-  </section>
-</main>
-<script src="/src/app.js?v=18"></script>
+  <noscript>This dashboard needs JavaScript enabled in your browser.</noscript>
+  <script src="src/vendor.js"></script>
+  <script src="src/core.js"></script>
+  <script src="src/app.js"></script>
 </body>
 </html>

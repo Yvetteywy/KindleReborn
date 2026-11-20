@@ -1,135 +1,185 @@
-<div align="center">
-
 # KindleReborn
 
-### 让闲置 Kindle 变成一块安静、耐看的墨水屏信息板
+A static, monochrome calendar and weather dashboard for Kindle and other e-ink
+browsers. No runtime application server, API keys, remote fonts, or framework.
 
-[![Node.js](https://img.shields.io/badge/Node.js-22-111111?logo=nodedotjs)](https://nodejs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5-111111?logo=typescript)](https://www.typescriptlang.org/)
-[![License](https://img.shields.io/badge/license-MIT-111111)](LICENSE)
+## Screenshots
 
-[在线体验](https://kindle.keyu.party/) · [Kindle 使用指南](#-kindle-使用指南) · [本地部署](#-本地部署)
+Browser captures of Boston using English and US units, with optional panels hidden.
+These demonstrate the layouts, not verified rendering on Kindle firmware 5.16.2.
 
-<img src="assets/kindle-reborn-preview.jpg" alt="KindleReborn 墨水屏日历天气看板预览" width="900">
+### Portrait (560 × 780)
 
-</div>
+![Portrait calendar and weather dashboard](assets/kindle-reborn-portrait.png)
 
-KindleReborn 是一个专为 Kindle 与其他墨水屏设备设计的单页日历。它把时间、月历、天气、空气质量、逐小时预报、农历黄历、星座运势和次日穿衣建议压进一张 **560 × 780** 的黑白画布里。
+### Landscape (780 × 560)
 
-没有动画、没有远程字体、没有厚重前端框架。页面采用高对比度排版和兼容旧版 WebKit 的基础 HTML/CSS/JavaScript，让一台吃灰的 Kindle 重新成为桌面上最克制的信息终端。
+![Landscape calendar and weather dashboard](assets/kindle-reborn-landscape.png)
 
-## 📖 Kindle 使用指南
+## Features
 
-无需安装，也无需越狱：
+- International city/postal-code search with country/region selection.
+- English and Chinese interfaces; US (°F, mph) and metric (°C, km/h) units.
+  English/US is the default.
+- Location-local clock and calendar with bundled timezone/DST rules.
+- Current weather, US AQI, four hourly forecasts, tomorrow's weather and clothing
+  advice. Missing readings are shown as `--`, not invented values.
+- Selectable portrait and landscape layouts.
+- Optional lunar calendar and Chinese almanac, hidden by default. Hiding panels
+  reclaims their space for the main calendar/weather layout.
+- Per-location weather caching, explicit stale/error indicators, and guarded
+  storage. The clock/calendar still work without storage or weather access.
+- City-local 07:00/17:00 black/white redraws to help reduce e-ink ghosting.
 
-1. 将 Kindle 连接到 Wi-Fi，打开内置浏览器。
-2. 访问 **[https://kindle.keyu.party/](https://kindle.keyu.party/)**。
-3. 如需切换城市，在网址后加入城市参数，例如：
+Live horoscope is deferred: its previous provider requires a private API key.
+No horoscope credentials or fabricated forecasts are shipped.
 
-   ```text
-   https://kindle.keyu.party/?city=广州
-   ```
+## Local development
 
-4. 将页面加入浏览器书签，下次可以直接打开；城市会自动保存在本机。
-5. 如需把 Kindle 长期作为桌面信息屏，可返回主页，在搜索框输入 `~ds` 并确认，以关闭自动休眠。重启 Kindle 即可恢复自动休眠。
+Requires Node.js 22 or newer.
 
-> `~ds` 会让设备保持唤醒并增加耗电，且可能不适用于部分新机型或固件。普通使用无需开启。
-
-## ✨ 功能亮点
-
-| 模块 | 内容 |
-| --- | --- |
-| 时间与日历 | UTC+8 分钟级时钟、公历月历、星期与农历日期 |
-| 实时天气 | 温度、体感、湿度、风力、空气质量、紫外线、降水概率 |
-| 趋势信息 | 四组逐小时天气与次日天气、穿衣建议 |
-| 传统日历 | 每日宜忌，最多各显示 5 项 |
-| 星座运势 | 综合、事业、财运、感情、健康、幸运色与幸运数字 |
-| 墨水屏优化 | 每日 07:00、17:00 执行全黑→全白整屏重绘，缓解残影 |
-| 弱网可用 | 浏览器本地缓存兜底；星座运势在服务端按天持久化 |
-
-## 🧭 数据如何流动
-
-```mermaid
-flowchart LR
-    K[Kindle 浏览器] -->|每 3 小时的第 10 分钟| S[Express 服务]
-    S --> W[Open-Meteo 天气与空气质量]
-    S --> L[lunar-javascript 黄历]
-    S --> J[聚合数据 星座运势]
-    J --> C[(每日 JSON 缓存)]
-    S --> K
-    K --> B[(浏览器本地缓存)]
-```
-
-- 天气、空气质量与地理编码来自 [Open-Meteo](https://open-meteo.com/)，无需 API Key。
-- 黄历由 [lunar-javascript](https://github.com/6tail/lunar-javascript) 在服务端计算。
-- 星座运势可选接入聚合数据 API；未配置时自动展示内置兜底内容。
-
-## 🚀 本地部署
-
-需要 Node.js 22 或更高版本。
-
-```bash
-git clone https://github.com/keyu-0915/KindleReborn.git
-cd KindleReborn
+```sh
 npm install
-cp .env.example .env
 npm run dev
 ```
 
-访问 `http://localhost:3000/`。通过查询参数切换城市：
+Open `http://localhost:3000/KindleReborn/`. Choose a city in **Settings**, select
+the correct country/region, then configure language, units, layout, and panels.
+Build output is static; the Node preview server is only a development tool.
+Run `npm run dev` again after changing source files to rebuild.
+
+```sh
+npm test                # Data, settings, units, cache and timezone tests
+npm run build           # Static public files in dist/
+npm run lint            # ES5 syntax checks, including the built vendor bundle
+npx playwright install chromium  # First browser-test setup
+npm run test:browser    # Layout, settings, network/storage failures and resume
+npm start               # Preview an existing build
+```
+
+## GitHub Pages deployment
+
+1. Commit/push this branch when ready and merge into `main`. To run the workflow
+   manually from a feature branch, the workflow must first exist on the default
+   branch; GitHub does not expose a new branch-only workflow for manual dispatch.
+2. In repository **Settings → Pages → Build and deployment**, select
+   **GitHub Actions**.
+3. The [Pages workflow](.github/workflows/pages.yml) builds and checks the site,
+   uploads only `dist/`, and deploys it. If manually deploying this branch,
+   ensure the `github-pages` environment permits that branch.
+4. After the workflow succeeds, open its deployment URL. For this repository
+   the default project URL is `https://yvetteywy.github.io/KindleReborn/`.
+
+The URL is not live merely because these files exist locally. No deployment
+secrets or application API keys are required. GitHub Pages serves static files;
+the browser contacts Open-Meteo directly over HTTPS.
+
+Relative asset paths work under a repository subpath or a custom domain.
+
+## Kindle setup and compatibility
+
+1. Connect the Kindle to Wi-Fi and enable JavaScript in its browser.
+2. Open the deployed GitHub Pages URL.
+3. Choose a city and settings. Use **Bookmark this configuration** to open a URL
+   containing the selected location and settings, then bookmark it in the browser.
+   This also works when local storage is unavailable.
+4. Test portrait/landscape according to the browser's actual viewport.
+
+The compatibility target is Kindle firmware **5.16.2**, not a verified guarantee.
+Browser scripts are checked as ES5 and use XMLHttpRequest, basic DOM operations,
+and table/float layouts. They do not require fetch, promises, modules, Intl,
+service workers, CSS grid/flexbox, or viewport units.
+
+**Actual Kindle testing is still required:** verify Pages HTTPS access, direct
+weather/geocoding/AQI requests, settings controls, SVG icons, both orientations,
+optional-panel layouts, readability, and sleep/resume behavior. Desktop tests
+cannot reproduce all older WebKit/TLS/storage quirks. Landscape selects a layout;
+it does not force the device/browser to rotate. On unusually small viewports,
+scrolling may be necessary rather than reducing text to unreadable sizes.
+
+The page cannot wake the Kindle, disable sleep, or trigger its hardware refresh.
+Black/white redraws are only a browser-level mitigation for ghosting.
+
+## Automatic updates and time
+
+- Time updates every minute. The date/calendar changes at location-local midnight.
+- Weather loads on opening the page or changing location, then at `00:10`,
+  `03:10`, `06:10`, etc. in the city's timezone (within the minute timer's cadence).
+- Focus/visibility events check for overdue updates after sleep. Timers and
+  network requests can be suspended while the device sleeps.
+- Failed weather requests keep the previous readings visibly marked stale and
+  retry no more frequently than once per minute. **Refresh** permits a manual retry.
+- Air-quality failure does not block weather; unavailable AQI is shown as `--`.
+
+Time comes from the **device clock**, not an independent internet time service.
+Keep the Kindle's clock accurate. Bundled moment-timezone data handles DST
+without relying on the Kindle's Intl implementation or a fixed UTC+8 offset.
+Rebuild with updated dependencies when governments change timezone rules.
+
+## URL settings
+
+`?city=Boston` opens a city search, requiring an explicit result selection.
+An unambiguous bookmark includes coordinates and an IANA timezone:
 
 ```text
-http://localhost:3000/?city=广州
+?latitude=42.36&longitude=-71.06&timezone=America%2FNew_York&name=Boston&language=en&units=us&orientation=landscape&lunar=0&almanac=0
 ```
 
-城市会保存在浏览器本地，下次打开时继续使用。
+| Parameter | Values |
+| --- | --- |
+| `language` | `en`, `zh` |
+| `units` | `us`, `metric` |
+| `orientation` | `portrait`, `landscape` |
+| `lunar`, `almanac` | `1` to show, `0` to hide |
+| `latitude`, `longitude` | Coordinates; both required |
+| `timezone` | Supported IANA timezone; required with coordinates |
+| `name`, `country`, `region` | Optional location labels |
 
-## 🔐 环境变量
+URL settings override saved settings on each page load. After changing settings,
+use the newly generated bookmark rather than an older URL containing overrides.
 
-| 变量 | 必填 | 默认值 | 说明 |
-| --- | --- | --- | --- |
-| `PORT` | 否 | `3000` | 服务监听端口 |
-| `CONSTELLATION` | 否 | `水瓶座` | 星座运势名称 |
-| `JUHE_CONSTELLATION_KEY` | 否 | — | 聚合数据星座运势 API Key，仅在服务端使用 |
+## Data and attribution
 
-星座接口结果保存在 `data/constellation.json`，同一星座每天最多请求一次。不要把真实 Key 写入前端代码或提交到 Git。
+- [Open-Meteo](https://open-meteo.com/) supplies weather and US AQI.
+- [Open-Meteo geocoding](https://open-meteo.com/en/docs/geocoding-api) uses GeoNames.
+- [lunar-javascript](https://github.com/6tail/lunar-javascript) calculates the
+  traditional calendar locally; English almanac terms use its bundled translations.
+  The lunar date uses the selected city's Gregorian day. These are traditional
+  Chinese cultural references, not universal recommendations.
+- [moment-timezone](https://momentjs.com/timezone/) supplies IANA timezone rules.
 
-## 🧰 常用命令
+Open-Meteo's free hosted API is for non-commercial use within its published
+[terms and limits](https://open-meteo.com/en/terms). Check those terms before
+commercial deployment; public endpoints may change or rate-limit requests.
+City queries and selected coordinates are sent to the corresponding API, not
+to a project application server. Settings/cache stay in the browser.
 
-```bash
-npm run dev      # 开发模式
-npm run lint     # TypeScript 类型检查
-npm run build    # 构建服务端产物
-npm start        # 运行已构建产物
-```
+Built output includes dependency notices in `LICENSES.txt`.
 
-## 📁 项目结构
+## Structure
 
 ```text
-KindleReborn/
-├─ assets/             # 黑白天气 SVG 图标
-├─ src/
-│  ├─ app.js           # Kindle 端 ES5 风格脚本
-│  └─ index.css        # 固定画布与旧 WebKit 兼容样式
-├─ index.html          # 单页界面
-└─ server.ts           # 天气、黄历、运势聚合服务
+index.html                 Dashboard and settings interface
+src/app.js                 ES5 browser requests, controls, rendering and timers
+src/core.js                Testable settings, data normalization and formatting
+src/index.css              Portrait/landscape e-ink layouts
+src/vendor.js              Build entry for locally bundled timezone/lunar libraries
+assets/                    Local monochrome weather icons
+scripts/                   Static build, preview and ES5 validation
+tests/                     Unit and browser checks
+.github/workflows/pages.yml GitHub Pages deployment
 ```
 
-## 🖋️ 设计取舍
+Contributor requirements are in [instruction.md](instruction.md); the approved
+migration sequence is in [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md).
 
-- 使用表格、浮动和基础 DOM API，优先兼容老 Kindle 浏览器。
-- 所有图标均为本地黑白 SVG，不依赖图标字体或外部 CDN。
-- 时钟每分钟更新一次。
-- 天气每 3 小时的第 10 分钟更新，服务端缓存随三小时档位自动失效；星座运势按天缓存。
-- 每日 07:00、17:00 执行黑白整屏重绘，缓解残影。
-- 网页只能通过黑白整屏重绘缓解残影，无法直接调用 Kindle 的硬件全刷。
+## 中文说明
 
-## 🤝 参与贡献
+这是无需应用服务器的 Kindle 黑白日历天气页，可部署到 GitHub Pages。
+在「设置」中选择城市、语言、单位及横竖屏布局；农历与黄历可分别显示或隐藏，
+隐藏后其余内容会使用腾出的空间。默认使用英文及美制单位。
+旧版 Kindle 固件 5.16.2 仍需要实际设备验证 HTTPS、跨域请求与显示效果。
 
-欢迎提交 Issue 或 Pull Request。若调整布局，请优先在 **560 × 780** 视口验证无横向或纵向溢出，并尽量保留旧版 WebKit 兼容性。
+## License
 
-## 📄 许可证
-
-[MIT](LICENSE) © 2026 keyu-0915
-
-> 星座运势仅供娱乐，不应作为医疗、财务或其他重要决策依据。
+[MIT](LICENSE). Original KindleReborn © 2026 keyu-0915.

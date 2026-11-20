@@ -2,25 +2,24 @@
   "name": "kindle-reborn",
   "private": true,
   "version": "1.0.0",
-  "description": "A monochrome calendar, weather, almanac and fortune dashboard for Kindle e-ink displays.",
+  "description": "A static bilingual calendar and weather dashboard for Kindle e-ink displays.",
   "license": "MIT",
-  "repository": "github:keyu-0915/KindleReborn",
+  "repository": "github:Yvetteywy/KindleReborn",
   "scripts": {
-    "dev": "tsx server.ts",
-    "build": "esbuild server.ts --bundle --platform=node --format=cjs --packages=external --outfile=dist/server.cjs",
-    "start": "node dist/server.cjs",
-    "lint": "tsc --noEmit"
+    "dev": "npm run build && node scripts/preview.cjs",
+    "build": "node scripts/build.cjs",
+    "start": "node scripts/preview.cjs",
+    "lint": "node scripts/check.cjs",
+    "test": "node --test tests/core.test.cjs",
+    "test:browser": "npm run build && playwright test"
   },
   "dependencies": {
-    "dotenv": "^17.2.3",
-    "esbuild": "^0.25.0",
-    "express": "^4.21.2",
     "lunar-javascript": "^1.7.7",
-    "tsx": "^4.21.0",
-    "typescript": "~5.8.2"
+    "moment-timezone": "^0.6.0"
   },
   "devDependencies": {
-    "@types/express": "^4.17.21",
-    "@types/node": "^22.14.0"
+    "@playwright/test": "^1.56.0",
+    "acorn": "^8.15.0",
+    "esbuild": "^0.25.0"
   }
 }

@@ -2,6 +2,8 @@ node_modules/
 build/
 dist/
 coverage/
+test-results/
+playwright-report/
 data/
 tmp/
 deploy/
@@ -10,4 +12,3 @@ Dockerfile
 .DS_Store
 *.log
 .env*
-!.env.example
