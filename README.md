@@ -22,8 +22,13 @@ These demonstrate the layouts, not verified rendering on Kindle firmware 5.16.2.
 - English and Chinese interfaces; US (°F, mph) and metric (°C, km/h) units.
   English/US is the default.
 - Location-local clock and calendar with bundled timezone/DST rules.
-- Current weather, US AQI, four hourly forecasts, tomorrow's weather and clothing
-  advice. Missing readings are shown as `--`, not invented values.
+- Enlarged clock/calendar, current weather, US AQI, and four hourly forecasts.
+  Missing readings are shown as `--`, not invented values.
+- Tap the city name immediately above the current temperature to open Settings;
+  manual Refresh is available there, while weather continues to refresh automatically. No top banner,
+  last-update timestamp, or persistent footer notes; loading/errors/stale-cache
+  warnings appear in the weather widget only when needed. A small Open-Meteo
+  attribution link remains at the bottom edge of the dashboard.
 - Selectable portrait and landscape layouts.
 - Optional lunar calendar and Chinese almanac, hidden by default. Hiding panels
   reclaims their space for the main calendar/weather layout.
@@ -43,7 +48,8 @@ npm install
 npm run dev
 ```
 
-Open `http://localhost:3000/KindleReborn/`. Choose a city in **Settings**, select
+Open `http://localhost:3000/KindleReborn/`. Tap the weather widget's city heading
+to open **Settings** (opened automatically on first use). Choose a city, select
 the correct country/region, then configure language, units, layout, and panels.
 Build output is static; the Node preview server is only a development tool.
 Run `npm run dev` again after changing source files to rebuild.
@@ -80,7 +86,8 @@ Relative asset paths work under a repository subpath or a custom domain.
 
 1. Connect the Kindle to Wi-Fi and enable JavaScript in its browser.
 2. Open the deployed GitHub Pages URL.
-3. Choose a city and settings. Use **Bookmark this configuration** to open a URL
+3. Tap the city heading to open Settings and choose a city and display options.
+   Use **Bookmark this configuration** to open a URL
    containing the selected location and settings, then bookmark it in the browser.
    This also works when local storage is unavailable.
 4. Test portrait/landscape according to the browser's actual viewport.
@@ -108,8 +115,12 @@ Black/white redraws are only a browser-level mitigation for ghosting.
 - Focus/visibility events check for overdue updates after sleep. Timers and
   network requests can be suspended while the device sleeps.
 - Failed weather requests keep the previous readings visibly marked stale and
-  retry no more frequently than once per minute. **Refresh** permits a manual retry.
+  retry no more frequently than once per minute. **Refresh** in Settings permits
+  a manual retry.
 - Air-quality failure does not block weather; unavailable AQI is shown as `--`.
+- Clock and traditional-calendar explanations are available in Settings rather
+  than persistent dashboard footnotes. Clothing advice and tomorrow's weather
+  panels have been removed to give the remaining widgets more space.
 
 Time comes from the **device clock**, not an independent internet time service.
 Keep the Kindle's clock accurate. Bundled moment-timezone data handles DST

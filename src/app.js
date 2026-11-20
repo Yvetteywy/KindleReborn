@@ -13,15 +13,15 @@
       almanac: "Chinese almanac", save: "Apply settings", bookmark: "Bookmark this configuration",
       metric: "Metric (°C, km/h)", us: "US (°F, mph)", humidity: "Humidity", feels: "Feels like",
       wind: "Wind", air: "US AQI", uv: "UV index", rain: "Rain chance", hourly: "Hourly forecast",
-      tomorrow: "Tomorrow", clothes: "Clothing suggestion", suitable: "Suitable", avoid: "Avoid",
+      weather: "Weather", suitable: "Suitable", avoid: "Avoid",
       traditional: "Traditional calendar; cultural reference only.", waiting: "Choose a city in Settings to load weather.",
       loading: "Loading weather…", searching: "Searching…", noResults: "No matching cities. Try another name or postal code.",
       weatherFailed: "Weather unavailable. Check Wi-Fi and retry.", airFailed: "Air quality unavailable.",
-      stale: "Stale cached weather", cached: "Cached weather", updated: "Updated", refresh: "Refresh",
+      stale: "Stale cached weather", refresh: "Refresh",
       storage: "Storage unavailable; settings/cache will not be saved.", badCache: "Saved weather was invalid and was ignored.",
       badSettings: "Saved settings were invalid and were ignored.", badURL: "Invalid URL settings.",
       timeError: "Location time zone unavailable. Choose another location.", searchFailed: "City search failed. Check Wi-Fi and retry.",
-      lunarError: "Lunar calendar unavailable.", noForecast: "Forecast unavailable", none: "None listed",
+      lunarError: "Lunar calendar unavailable.", none: "None listed",
       leap: "leap month", month: "month", day: "day", clock: "Time uses your device clock.",
       locationRequired: "Choose a location before creating a bookmark.",
       days: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
@@ -33,14 +33,14 @@
       landscape: "横屏", lunar: "农历", almanac: "黄历", save: "应用设置", bookmark: "将此配置加入书签",
       metric: "公制 (°C, km/h)", us: "美制 (°F, mph)", humidity: "湿度", feels: "体感",
       wind: "风速", air: "美国 AQI", uv: "紫外线", rain: "降水概率", hourly: "逐小时预报",
-      tomorrow: "明日天气", clothes: "穿衣建议", suitable: "宜", avoid: "忌", traditional: "传统日历，仅供文化参考。",
+      weather: "天气", suitable: "宜", avoid: "忌", traditional: "传统日历，仅供文化参考。",
       waiting: "请在设置中选择城市以加载天气。", loading: "正在加载天气…", searching: "正在搜索…",
       noResults: "未找到城市，请尝试其他名称或邮政编码。", weatherFailed: "天气暂不可用，请检查网络后重试。",
-      airFailed: "空气质量暂不可用。", stale: "缓存天气已过期", cached: "缓存天气", updated: "更新于",
+      airFailed: "空气质量暂不可用。", stale: "缓存天气已过期",
       refresh: "刷新", storage: "无法使用本地存储，设置和天气缓存不会保存。",
       badCache: "天气缓存无效，已忽略。", badSettings: "已保存的设置无效，已忽略。", badURL: "网址设置无效。",
       timeError: "地点时区不可用，请选择其他地点。", searchFailed: "城市搜索失败，请检查网络后重试。",
-      lunarError: "农历暂不可用。", noForecast: "暂无预报", none: "无", leap: "闰月", month: "月", day: "日",
+      lunarError: "农历暂不可用。", none: "无", leap: "闰月", month: "月", day: "日",
       clock: "时间以设备时钟为准。", locationRequired: "请先选择地点再创建书签。",
       days: ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"],
       months: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"]
@@ -114,41 +114,45 @@
   }
   function status() {
     if (!options) return;
-    var messages = [], local;
+    var messages = [];
     if (notice) messages.push(t(notice));
     if (storageFailed) messages.push(t("storage"));
     if (weatherError) messages.push(t(weatherError));
-    else if (pending) messages.push(t("loading") + (data ? " · " + t("cached") : ""));
-    else if (data) {
-      local = parts(data.fetchedAt);
-      messages.push(t(lastSlot === core.weatherSlot(Date.now(), place.timezone, moment) ? "updated" : "stale") +
-        " " + core.dateKey(local) + " " + core.pad(local.hour) + ":" + core.pad(local.minute));
-    } else messages.push(t("waiting"));
-    if (weatherError && data) messages.push(t("stale"));
+    else if (!data) messages.push(t(pending ? "loading" : "waiting"));
+    if (data && (weatherError || lastSlot !== core.weatherSlot(Date.now(), place.timezone, moment))) messages.push(t("stale"));
     if (airError) messages.push(t(airError));
-    text("status", messages.join(" · "));
+    text("weather-notice", messages.join(" · "));
+    el("weather-notice").style.display = messages.length ? "block" : "none";
+    resizeWeather();
   }
   function translate() {
     document.documentElement.lang = options.language === "zh" ? "zh-CN" : "en";
     document.title = t("title");
     var nodes = document.querySelectorAll("[data-label]"), i;
     for (i = 0; i < nodes.length; i++) text(nodes[i], t(nodes[i].getAttribute("data-label")));
-    text("clock-note", t("clock"));
-    text("city-name", place ? locationName(place) : t("title"));
+    text("weather-city", place ? place.name : t("weather"));
+    el("weather-city").title = place ? locationName(place) : t("weather");
+    el("weather-city").setAttribute("aria-label", t("settings") + ": " + (place ? locationName(place) : t("weather")));
+    text("location-details", place ? locationName(place) + " · " + place.timezone : "");
     el("language").value = options.language; el("units").value = options.units;
     el("orientation").value = options.orientation; el("show-lunar").checked = options.lunar; el("show-almanac").checked = options.almanac;
     lastDate = ""; resize(); tick(); renderWeather(); status();
   }
   function resize() {
     var width = document.documentElement.clientWidth || 560, height = document.documentElement.clientHeight || 780;
-    var landscape = options.orientation === "landscape", board = el("board"), optionalHeight = (options.lunar ? 36 : 0) + (options.almanac ? 104 : 0);
+    var landscape = options.orientation === "landscape", board = el("board"), optionalHeight = (options.lunar ? 36 : 0) + (options.almanac ? 88 : 0);
     board.className = landscape ? "landscape" : "portrait";
     board.style.width = Math.min(width, landscape ? 780 : 560) + "px";
-    board.style.height = Math.max((landscape ? 358 : 578) + optionalHeight,
-      Math.min(Math.max(height - 62, 240), landscape ? 560 : 780)) + "px";
-    el("core-panels").style.height = Math.max(100, parseInt(board.style.height, 10) - optionalHeight) + "px";
+    board.style.height = Math.max((landscape ? 400 : 630) + optionalHeight + 16,
+      Math.min(height, landscape ? 560 : 780)) + "px";
+    el("core-panels").style.height = Math.max(100, parseInt(board.style.height, 10) - optionalHeight - 16) + "px";
     el("lunar-panel").style.display = options.lunar ? "block" : "none";
     el("almanac-panel").style.display = options.almanac ? "block" : "none";
+    resizeWeather();
+  }
+  function resizeWeather() {
+    el("weather-details").style.height = Math.max(140, el("weather-widget").clientHeight -
+      el("weather-notice").offsetHeight) + "px";
   }
   function renderCalendar(local) {
     var year = local.year, month = local.month - 1, first = new Date(Date.UTC(year, month, 1)).getUTCDay();
@@ -188,7 +192,6 @@
     catch (error) { report(error); notice = "timeError"; status(); return; }
     text("time", core.pad(local.hour) + ":" + core.pad(local.minute)); date = core.dateKey(local);
     text("date", date.replace(/-/g, " / ")); text("weekday", t("days")[local.weekday]);
-    text("timezone", place ? place.timezone.replace(/_/g, " ") : "");
     if (date !== lastDate) { lastDate = date; renderCalendar(local); renderWeather(); }
     if (place) {
       var slot = core.weatherSlot(now, place.timezone, moment);
@@ -200,14 +203,12 @@
     status();
   }
   function renderWeather() {
-    var fields = ["temp", "condition", "high-low", "humidity", "feels", "wind", "air", "uv", "rain", "tomorrow-condition", "tomorrow-high-low", "dressing"], i;
+    var fields = ["temp", "condition", "high-low", "humidity", "feels", "wind", "air", "uv", "rain"], i;
     if (!data || !place) {
       for (i = 0; i < fields.length; i++) text(fields[i], "--");
-      clear(el("hourly")); clear(el("condition-icon")); clear(el("tomorrow-icon")); return;
+      clear(el("hourly")); clear(el("condition-icon")); return;
     }
     var local = parts(Date.now()), today = core.dailyFor(data, core.dateKey(local), moment);
-    var next = new Date(Date.UTC(local.year, local.month - 1, local.day + 1));
-    var tomorrow = core.dailyFor(data, core.dateKey({ year: next.getUTCFullYear(), month: next.getUTCMonth() + 1, day: next.getUTCDate() }), moment);
     var current = data.current, article, value, localHour;
     text("temp", temp(current.temperature)); text("condition", core.condition(current.code, options.language));
     image(el("condition-icon"), current.code); text("high-low", today ? temp(today.high) + " / " + temp(today.low) : "--");
@@ -225,10 +226,6 @@
       value = document.createElement("b"); text(value, temp(data.hourly[i].temperature)); article.appendChild(value);
       el("hourly").appendChild(article);
     }
-    text("tomorrow-condition", tomorrow ? core.condition(tomorrow.code, options.language) : t("noForecast"));
-    if (tomorrow) image(el("tomorrow-icon"), tomorrow.code); else clear(el("tomorrow-icon"));
-    text("tomorrow-high-low", tomorrow ? temp(tomorrow.high) + " / " + temp(tomorrow.low) : "--");
-    text("dressing", core.advice(tomorrow, options.language));
   }
   function loadCache() {
     var saved = readJSON(CACHE + core.placeKey(place));
@@ -275,7 +272,7 @@
     }
     generation++; place = selected; pending = false; weatherError = ""; airError = ""; lastAttempt = 0;
     store(PLACE, place); loadCache(); translate(); loadWeather(); updateBookmark();
-    el("settings-panel").style.display = "none";
+    closeSettings();
   }
   function searchCity(city) {
     var token = ++searchGeneration;
@@ -302,6 +299,16 @@
   function updateBookmark() {
     if (!place) { el("bookmark").removeAttribute("href"); return; }
     el("bookmark").href = core.bookmark(place, options);
+  }
+  function openSettings() {
+    el("settings-panel").style.display = "block";
+    el("weather-city").setAttribute("aria-expanded", "true");
+    el("city-input").focus();
+  }
+  function closeSettings() {
+    el("settings-panel").style.display = "none";
+    el("weather-city").setAttribute("aria-expanded", "false");
+    el("weather-city").focus();
   }
   function clean() {
     var overlay = el("eink-refresh"); overlay.style.display = "block"; overlay.style.background = "#000";
@@ -333,8 +340,8 @@
   catch (error) { notice = "badURL"; report(error); }
   if (parsed.values.city && !urlPlace) place = null;
   if (place) loadCache();
-  el("open-settings").onclick = function () { el("settings-panel").style.display = "block"; el("city-input").focus(); };
-  el("close-settings").onclick = function () { el("settings-panel").style.display = "none"; };
+  el("weather-city").onclick = openSettings;
+  el("close-settings").onclick = closeSettings;
   el("city-search").onsubmit = function (event) {
     if (event && event.preventDefault) event.preventDefault();
     var city = el("city-input").value.replace(/^\s+|\s+$/g, "");
@@ -355,7 +362,7 @@
   translate(); updateBookmark(); clean();
   if (place) loadWeather();
   else {
-    el("settings-panel").style.display = "block";
+    openSettings();
     if (parsed.values.city) { el("city-input").value = parsed.values.city; searchCity(parsed.values.city); }
   }
   setInterval(tick, 60000);

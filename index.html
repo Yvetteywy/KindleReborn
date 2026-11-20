@@ -8,11 +8,6 @@
 </head>
 <body>
   <div id="eink-refresh"></div>
-  <div class="toolbar">
-    <button id="open-settings" type="button" data-label="settings">Settings</button>
-    <button id="refresh-weather" type="button" data-label="refresh">Refresh</button>
-    <span id="city-name">Kindle calendar &amp; weather</span>
-  </div>
   <main id="board" class="portrait">
     <div id="core-panels">
       <section class="date-panel">
@@ -21,7 +16,6 @@
             <div id="time">--:--</div>
             <div id="date">-- / -- / --</div>
             <h1 id="weekday">--</h1>
-            <div id="timezone"></div>
           </div>
           <div class="calendar">
             <h2 id="month-title">Calendar</h2>
@@ -30,42 +24,39 @@
         </div>
       </section>
       <section class="forecast-panel">
-        <div class="weather">
-          <div class="now">
-            <b id="temp">--</b>
-            <div class="condition"><span id="condition-icon"></span><strong id="condition">--</strong></div>
-            <small id="high-low">--</small>
-          </div>
-          <div class="metrics">
-            <div><span data-label="humidity">Humidity</span><b id="humidity">--</b></div>
-            <div><span data-label="feels">Feels like</span><b id="feels">--</b></div>
-            <div><span data-label="wind">Wind</span><b id="wind">--</b></div>
-            <div><span data-label="air">US AQI</span><b id="air">--</b></div>
-            <div><span data-label="uv">UV index</span><b id="uv">--</b></div>
-            <div><span data-label="rain">Rain chance</span><b id="rain">--</b></div>
+        <div id="weather-widget">
+          <div id="weather-notice" role="status" style="display:none"></div>
+          <div class="weather" id="weather-details">
+            <div class="now">
+              <h2 class="weather-title"><button id="weather-city" type="button" aria-controls="settings-panel" aria-expanded="false">Weather</button></h2>
+              <b id="temp">--</b>
+              <div class="condition"><span id="condition-icon"></span><strong id="condition">--</strong></div>
+              <small id="high-low">--</small>
+            </div>
+            <div class="metrics">
+              <div><span data-label="humidity">Humidity</span><b id="humidity">--</b></div>
+              <div><span data-label="feels">Feels like</span><b id="feels">--</b></div>
+              <div><span data-label="wind">Wind</span><b id="wind">--</b></div>
+              <div><span data-label="air">US AQI</span><b id="air">--</b></div>
+              <div><span data-label="uv">UV index</span><b id="uv">--</b></div>
+              <div><span data-label="rain">Rain chance</span><b id="rain">--</b></div>
+            </div>
           </div>
         </div>
         <div class="hourly-panel"><h3 data-label="hourly">Hourly forecast</h3><div id="hourly"></div></div>
-        <div class="tomorrow-panel">
-          <div class="dressing"><h3 data-label="clothes">Clothing suggestion</h3><p id="dressing">--</p></div>
-          <div class="tomorrow"><h3 data-label="tomorrow">Tomorrow</h3><div id="tomorrow-icon"></div><b id="tomorrow-condition">--</b><span id="tomorrow-high-low">--</span></div>
-        </div>
       </section>
     </div>
     <section id="lunar-panel"><b data-label="lunar">Lunar calendar</b><span id="lunar-date">--</span></section>
     <section id="almanac-panel">
       <div><b data-label="suitable">Suitable</b><span id="suitable">--</span></div>
       <div><b data-label="avoid">Avoid</b><span id="avoid">--</span></div>
-      <small data-label="traditional">Traditional calendar; cultural reference only.</small>
     </section>
+    <a class="weather-credit" href="https://open-meteo.com/">Open-Meteo</a>
   </main>
-  <div class="page-footer">
-    <div id="status" role="status">Choose a city in Settings to load weather.</div>
-    <span id="clock-note">Time uses your device clock.</span> · <a href="https://open-meteo.com/">Weather: Open-Meteo</a>
-  </div>
   <section id="settings-panel" style="display:none" aria-label="Settings">
     <button id="close-settings" type="button" data-label="close">Done</button>
     <h2 data-label="settings">Settings</h2>
+    <button id="refresh-weather" type="button" data-label="refresh">Refresh</button>
     <form id="city-search">
       <label for="city-input" data-label="city">City or postal code</label>
       <input id="city-input" type="text" maxlength="100">
@@ -73,6 +64,8 @@
     </form>
     <div id="search-status" role="status"></div>
     <ul id="city-results"></ul>
+    <p class="settings-note" id="location-details"></p>
+    <p class="settings-note" data-label="clock">Time uses your device clock.</p>
     <form id="display-settings">
       <label for="language" data-label="language">Language</label>
       <select id="language"><option value="en">English</option><option value="zh">中文</option></select>
@@ -82,6 +75,7 @@
       <select id="orientation"><option value="portrait" data-label="portrait">Portrait</option><option value="landscape" data-label="landscape">Landscape</option></select>
       <div class="toggle"><label><input id="show-lunar" type="checkbox"><span data-label="lunar">Lunar calendar</span></label></div>
       <div class="toggle"><label><input id="show-almanac" type="checkbox"><span data-label="almanac">Chinese almanac</span></label></div>
+      <p class="settings-note" data-label="traditional">Traditional calendar; cultural reference only.</p>
       <button type="submit" data-label="save">Apply settings</button>
     </form>
     <p><a id="bookmark" data-label="bookmark">Bookmark this configuration</a></p>

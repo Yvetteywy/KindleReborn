@@ -177,13 +177,6 @@
     }
     return true;
   }
-  function advice(day, language) {
-    if (!day) return language === "zh" ? "暂无明日预报" : "Tomorrow's forecast unavailable";
-    var level = day.high >= 30 ? 0 : day.high >= 22 ? 1 : day.high >= 14 ? 2 : 3;
-    var value = (language === "zh" ? ["轻薄透气短袖", "短袖或薄外套", "长袖和薄外套", "保暖外套"] :
-      ["Light, breathable clothing", "Short sleeves or a light jacket", "Long sleeves and a light jacket", "A warm coat"])[level];
-    return value + (number(day.rain) && day.rain >= 40 ? (language === "zh" ? "，带上雨具。" : "; take an umbrella.") : (language === "zh" ? "。" : "."));
-  }
   function bookmark(place, options) {
     var pairs = [], key, values = { latitude: place.latitude, longitude: place.longitude,
       timezone: place.timezone, name: place.name, country: place.country || "", region: place.region || "",
@@ -196,5 +189,5 @@
     validPlace: validPlace, placeFromQuery: placeFromQuery, places: places, placeKey: placeKey,
     localParts: localParts, weatherSlot: weatherSlot, condition: condition, icon: icon,
     temperature: temperature, wind: wind, direction: direction, airLabel: airLabel,
-    normalize: normalize, dailyFor: dailyFor, validCache: validCache, advice: advice, bookmark: bookmark };
+    normalize: normalize, dailyFor: dailyFor, validCache: validCache, bookmark: bookmark };
 }));

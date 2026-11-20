@@ -59,6 +59,22 @@ Status: approved. Follow the implementation sequence in
   browser code. Decide its static-compatible data delivery before implementing
   the panel; never substitute invented predictions.
 
+## Dashboard presentation
+
+- Put the city inside the weather widget, not a separate top banner.
+  Make the city heading a keyboard/touch
+  accessible Settings trigger; put manual Refresh inside Settings, not the
+  normal dashboard.
+- Keep the city heading inside the current-weather block, centered immediately
+  above the temperature in both layouts rather than in a separate header row.
+- Keep required Open-Meteo attribution visible at the dashboard's bottom edge.
+  Reserve its line so it does not overlap widgets or fall outside the viewport.
+- Do not show routine last-update timestamps or persistent explanatory footnotes.
+  Keep loading/error/stale-data warnings inside the weather widget when needed;
+  move clock and traditional-calendar explanations to Settings.
+- Show clock/calendar, current weather and hourly forecasts with larger type.
+  Do not restore clothing advice or tomorrow's weather panels without approval.
+
 ## Validation and documentation
 
 - Test data normalization, units, location ambiguity, time zones and DST,

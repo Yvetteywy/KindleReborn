@@ -67,10 +67,3 @@ test("URL settings and bookmarks round-trip unicode, zero coordinates, and widge
   assert.throws(() => core.placeFromQuery({ latitude: "", longitude: "0", timezone: "UTC" }), /required/);
   assert.throws(() => core.settings({ units: "kelvin" }), /Invalid setting/);
 });
-
-test("clothing advice uses Celsius thresholds independently of displayed Fahrenheit", () => {
-  assert.equal(core.advice({ high: 14, rain: 40 }, "en"), "Long sleeves and a light jacket; take an umbrella.");
-  assert.equal(core.advice(null, "en"), "Tomorrow's forecast unavailable");
-  assert.equal(core.condition(71, "en"), "Snow");
-  assert.equal(core.icon(71), "snow");
-});
